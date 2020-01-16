@@ -1,0 +1,60 @@
+.wrapper {
+  padding: 40px 0;
+}
+
+.form {
+  width: 100%;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.from-control {
+  display: flex;
+  flex-direction: column;
+  margin-right: 30px;
+
+  label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+
+  input {
+    width: 300px;
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    min-height: 36px;
+    align-items: center;
+    color: #333;
+    cursor: default;
+    display: flex;
+    outline: 0;
+    overflow: hidden;
+    padding: 0 5px;
+  }
+
+  &-category{
+    min-width: 150px;
+  }
+
+  &-search {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    margin-right: 0;
+  }
+}
+
+.card {
+  flex-basis: 30%;
+  margin-bottom: 30px
+}
+
+.error {
+  padding: 30px 0;
+  font-size: 16px;
+  text-align: center;
+}
+

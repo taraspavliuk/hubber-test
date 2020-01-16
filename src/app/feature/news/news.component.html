@@ -1,0 +1,54 @@
+<div class="wrapper">
+  <div class="container">
+    <div class="row">
+      <form [formGroup]="form" class="form">
+        <div class="from-control">
+          <label>Country</label>
+          <ng-select id="country"
+                     [items]="countries"
+                     bindLabel="label"
+                     bindValue="value"
+                     formControlName="country"
+                     [clearable]="false">
+          </ng-select>
+        </div>
+        <div class="from-control from-control-category">
+          <label>Category</label>
+          <ng-select id="category"
+                     [items]="categories"
+                     bindLabel="label"
+                     bindValue="value"
+                     formControlName="category"
+                     [clearable]="false">
+          </ng-select>
+        </div>
+        <div class="from-control from-control-search">
+          <label for="query">Keyword</label>
+          <input id="query" class="from-control-input" (input)="onQueryChange($event)">
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <strong class="error" *ngIf="error$ | async as error">{{ error }}</strong>
+    </div>
+    <ng-container *ngIf="(totalResults$ | async) > 0">
+      <div class="row ">
+        <div class="card-deck">
+            <app-news-article *ngFor="let item of news$ | async"
+                              class="card"
+                              [item]="item"></app-news-article>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <pagination [itemsPerPage]="pageSize"
+                    [totalItems]="totalResults$ | async"
+                    (pageChanged)="onPageChange($event.page)">
+        </pagination>
+      </div>
+    </ng-container>
+
+  </div>
+</div>
