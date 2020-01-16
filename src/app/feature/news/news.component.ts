@@ -72,7 +72,7 @@ export class NewsComponent implements OnInit {
     const q = $event.target.value.length > 2 ? $event.target.value : '';
 
     if (this.form.value.q !== q) {
-      this.form.patchValue({q});
+      this.form.patchValue({q, page: [1]});
     }
   }
 
