@@ -48,7 +48,7 @@
             ],
             "styles": [
               "src/styles.scss",
-              "~@ng-select/ng-select/themes/default.theme.css"
+              "node_modules/@ng-select/ng-select/scss/default.theme.scss"
             ],
             "scripts": []
           },

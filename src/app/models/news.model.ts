@@ -27,4 +27,5 @@ export interface NewsQuery {
   country: string;
   category: string;
   page: string;
+  pageSize: string;
 }

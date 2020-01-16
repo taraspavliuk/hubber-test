@@ -1,11 +1,10 @@
 import {Component} from '@angular/core';
 import {HttpErrorResponse} from '@angular/common/http';
-import {FormBuilder, FormGroup} from '@angular/forms';
 import {NewsApiService} from '../../services/news-api.service';
 import {CATEGORIES, COUNTRIES} from '../../dictionary';
 import {NewsArticle, NewsQuery, NewsResponse} from '../../models/news.model';
-import {Observable, of} from 'rxjs';
-import {catchError, debounceTime, map, shareReplay, startWith, switchMap} from 'rxjs/operators';
+import {BehaviorSubject, Observable, of} from 'rxjs';
+import {catchError, debounceTime, map, shareReplay, switchMap} from 'rxjs/operators';
 
 @Component({
   templateUrl: './news.component.html',
@@ -14,31 +13,30 @@ import {catchError, debounceTime, map, shareReplay, startWith, switchMap} from '
 export class NewsComponent {
   countries = COUNTRIES;
   categories = CATEGORIES;
-  pageSize = 12;
-  private form: FormGroup;
+  pageSize = 9;
+  currentPage = 1;
+  selectedCountry = {label: 'us', value: 'us'};
+  selectedCategory = {label: 'all', value: ''};
+  private filter$: BehaviorSubject<NewsQuery>;
   private response$: Observable<NewsResponse>;
   private news$: Observable<NewsArticle[]>;
   private totalResults$: Observable<number>;
   private error$: Observable<string>;
 
-  constructor(readonly fb: FormBuilder,
-              private readonly newsApiService: NewsApiService) {
-    this.form = this.fb.group({
-      country: ['us'],
-      category: [''],
-      q: [''],
-      pageSize: [this.pageSize],
-      page: [1]
+  constructor(private readonly newsApiService: NewsApiService) {
+
+    this.filter$ = new BehaviorSubject({
+      country: this.selectedCountry.value,
+      category: this.selectedCategory.value,
+      q: '',
+      pageSize: this.pageSize.toString(),
+      page: this.currentPage.toString()
     });
 
-    this.response$ = this.form.valueChanges
+    this.response$ = this.filter$.asObservable()
       .pipe(
-        startWith(this.form.value),
         debounceTime(200),
-        map(form =>
-          Object.keys(form).reduce((req, key) => (form[key] ? {...req, [key]: form[key]} : req), {})
-        ),
-        switchMap(req => this.fetchNews(req)),
+        switchMap(filter => this.fetchNews(filter)),
         shareReplay()
       );
 
@@ -48,7 +46,6 @@ export class NewsComponent {
 
     this.error$ = this.response$.pipe(map(r => (r.status === 'error' ? r.message : '')));
   }
-
 
   private fetchNews(query: Partial<NewsQuery>) {
     return this.newsApiService.getNews(query)
@@ -65,16 +62,31 @@ export class NewsComponent {
       );
   }
 
+  onCountryChange() {
+    this.filter$.next({...this.filter$.getValue(), country: this.selectedCountry.value, page: '1'});
+    this.setPage(1);
+  }
+
+  onCountryCategory() {
+    this.filter$.next({...this.filter$.getValue(), category: this.selectedCategory.value, page: '1'});
+    this.setPage(1);
+  }
+
   onQueryChange($event) {
     const q = $event.target.value.length > 2 ? $event.target.value : '';
 
-    if (this.form.value.q !== q) {
-      this.form.patchValue({q, page: 1});
+    if (this.filter$.value.q !== q) {
+      this.filter$.next({...this.filter$.getValue(), q, page: '1'});
+      this.setPage(1);
     }
   }
 
-  onPageChange(page: number) {
-    this.form.patchValue({page});
+  onPageChange($event) {
+    this.filter$.next({...this.filter$.getValue(), page: $event.page.toString()});
+  }
+
+  setPage(page: number): void {
+    this.currentPage = page;
   }
 
 }
