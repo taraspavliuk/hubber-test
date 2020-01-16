@@ -1,0 +1,11 @@
+<img class="card-img-top"
+     [src]="item.urlToImage"
+     alt="Card image cap">
+<div class="card-body">
+  <h5 class="card-title">{{ item.title }}</h5>
+  <strong class="card-autor">{{item.author}}</strong>
+  <p class="card-text">{{ item.description }}</p>
+</div>
+<div class="card-footer">
+  <small class="text-muted">{{ item.publishedAt }}</small>
+</div>
