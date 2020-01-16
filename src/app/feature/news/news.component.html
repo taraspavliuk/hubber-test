@@ -33,13 +33,14 @@
   <div class="container">
     <div class="row">
       <strong class="error" *ngIf="error$ | async as error">{{ error }}</strong>
+      <strong *ngIf="(totalResults$ | async) === 0" class="error">News not found</strong>
     </div>
     <ng-container *ngIf="(totalResults$ | async) > 0">
       <div class="row ">
         <div class="card-deck">
-            <app-news-article *ngFor="let item of news$ | async"
-                              class="card"
-                              [item]="item"></app-news-article>
+          <app-news-article *ngFor="let item of news$ | async"
+                            class="card"
+                            [item]="item"></app-news-article>
         </div>
       </div>
       <div class="row justify-content-center">
@@ -49,6 +50,5 @@
         </pagination>
       </div>
     </ng-container>
-
   </div>
 </div>

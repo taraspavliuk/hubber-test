@@ -37,10 +37,7 @@ export class NewsComponent implements OnInit {
       .pipe(
         startWith(this.form.value),
         debounceTime(200),
-        map((value: NewsQuery) => ({
-          ...value,
-          q: value.q.length > 2 ? value.q : ''
-        })),
+        map((value: NewsQuery) => ({...value})),
         map(form =>
           Object.keys(form).reduce((req, key) => (form[key] ? {...req, [key]: form[key]} : req), {})
         ),
@@ -57,7 +54,6 @@ export class NewsComponent implements OnInit {
 
 
   private fetchNews(query: Partial<NewsQuery>) {
-    console.log('fetch news', query);
     return this.newsApiService.getNews(query)
       .pipe(
         catchError((err: HttpErrorResponse) =>
