@@ -5,7 +5,6 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {PaginationModule} from 'ngx-bootstrap';
 
-
 const routes: Routes = [
   {
     path: '',

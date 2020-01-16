@@ -5,7 +5,6 @@ import {API_KEY} from '../dictionary';
 import {Observable} from 'rxjs';
 
 @Injectable()
-
 export class NewsApiService {
 
   constructor(private http: HttpClient) {
@@ -16,5 +15,4 @@ export class NewsApiService {
       params: {...query, apiKey: API_KEY}
     });
   }
-
 }

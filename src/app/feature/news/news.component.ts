@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {HttpErrorResponse} from '@angular/common/http';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {NewsApiService} from '../../services/news-api.service';
@@ -11,7 +11,7 @@ import {catchError, debounceTime, map, shareReplay, startWith, switchMap} from '
   templateUrl: './news.component.html',
   styleUrls: ['./news.component.scss']
 })
-export class NewsComponent implements OnInit {
+export class NewsComponent {
   countries = COUNTRIES;
   categories = CATEGORIES;
   pageSize = 12;
@@ -30,14 +30,11 @@ export class NewsComponent implements OnInit {
       pageSize: [this.pageSize],
       page: [1]
     });
-  }
 
-  ngOnInit() {
     this.response$ = this.form.valueChanges
       .pipe(
         startWith(this.form.value),
         debounceTime(200),
-        map((value: NewsQuery) => ({...value})),
         map(form =>
           Object.keys(form).reduce((req, key) => (form[key] ? {...req, [key]: form[key]} : req), {})
         ),
@@ -72,7 +69,7 @@ export class NewsComponent implements OnInit {
     const q = $event.target.value.length > 2 ? $event.target.value : '';
 
     if (this.form.value.q !== q) {
-      this.form.patchValue({q, page: [1]});
+      this.form.patchValue({q, page: 1});
     }
   }
 
